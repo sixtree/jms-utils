@@ -167,7 +167,6 @@ public class JmsBridgePerformance {
                 	String header = String.valueOf(i);
                 	Message message = session.createTextMessage(tradeMessage);
                 	message.setStringProperty(jmsHeader, header);
-                	message.setStringProperty("fxi_legalEntity", "INSTOFXI");
 
                 	monitor.reportMessageSent(header);                	
 
