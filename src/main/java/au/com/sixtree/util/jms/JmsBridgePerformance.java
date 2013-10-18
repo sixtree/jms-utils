@@ -31,6 +31,7 @@ public class JmsBridgePerformance {
 		String server = prop.getProperty("server", "tcp://localhost:61616");
 		int numMessages = Integer.valueOf(prop.getProperty("messages", "1000"));
 		int numConsumers = Integer.valueOf(prop.getProperty("consumers", "1"));
+		int sleepTime = Integer.valueOf(prop.getProperty("sleepTime", "0"));
 		String header = prop.getProperty("header");
 		Boolean persistent = Boolean.valueOf(prop.getProperty("persistent", "true"));
 		String queueIn = prop.getProperty("queue.in");
@@ -48,7 +49,7 @@ public class JmsBridgePerformance {
     		thread(new Consumer(monitor, server, queueOut, header));
     	}
 
-        thread(new Producer(monitor, server, queueIn, header, numMessages, persistent, messageContents));
+        thread(new Producer(monitor, server, queueIn, header, numMessages, persistent, sleepTime, messageContents));
 
         monitor.waitUntilAllReceived();
         monitor.printResults(resultsFilename);
@@ -138,16 +139,25 @@ public class JmsBridgePerformance {
     	String queue;
     	String jmsHeader;
     	int numMessages;
+    	int sleepTime;
     	boolean persistent;
     	String tradeMessage;
 
-    	public Producer(Monitor monitor, String server, String queue, String jmsHeader, int numMessages, boolean persistent, String tradeMessage) {
+    	public Producer(Monitor monitor,
+    			String server,
+    			String queue,
+    			String jmsHeader,
+    			int numMessages,
+    			boolean persistent,
+    			int sleepTime,
+    			String tradeMessage) {
     		this.monitor = monitor;
     		this.server = server;
     		this.queue = queue;
     		this.jmsHeader = jmsHeader;
     		this.numMessages = numMessages;
     		this.persistent = persistent;
+    		this.sleepTime = sleepTime;
     		this.tradeMessage = tradeMessage;
     	}
 
@@ -171,6 +181,7 @@ public class JmsBridgePerformance {
                 	monitor.reportMessageSent(header);                	
 
                 	producer.send(message);
+                	Thread.sleep(sleepTime);
                 }
  
                 session.close();
