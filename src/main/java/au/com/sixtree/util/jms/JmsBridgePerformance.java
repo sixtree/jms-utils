@@ -37,8 +37,12 @@ public class JmsBridgePerformance {
 		String queueIn = prop.getProperty("queue.in");
 		String queueOut = prop.getProperty("queue.out");
 		String messageFilename = prop.getProperty("messageFile");
-		File file = new File(messageFilename);
-		String messageContents = FileUtils.readFileToString(file);
+		String messageContents = "test";
+		if(messageFilename != null)
+		{
+			File file = new File(messageFilename);
+			messageContents = FileUtils.readFileToString(file);
+		}
 		String resultsFilename = prop.getProperty("detailedResultsFile");
 		
 
